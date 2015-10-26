@@ -17,14 +17,15 @@
 
 #include "Kalman.h"
 
-Kalman::Kalman() {
+Kalman::Kalman(float priorAngle, float priorBias, float timestep) {
     /* We will set the variables like so, these can also be tuned by the user */
     Q_angle = 0.001f;
     Q_bias = 0.003f;
     R_measure = 0.03f;
+    dt = timestep;
 
-    angle = 0.0f; // Reset the angle
-    bias = 0.0f; // Reset bias
+    angle = priorAngle; // Reset the angle
+    bias = priorBias; // Reset bias
 
     P[0][0] = 0.0f; // Since we assume that the bias is 0 and we know the starting angle (use setAngle), the error covariance matrix is set like so - see: http://en.wikipedia.org/wiki/Kalman_filter#Example_application.2C_technical
     P[0][1] = 0.0f;
@@ -33,7 +34,7 @@ Kalman::Kalman() {
 };
 
 // The angle should be in degrees and the rate should be in degrees per second and the delta time in seconds
-float Kalman::getAngle(float newAngle, float newRate, float dt) {
+float Kalman::getAngle(float newAngle, float newRate) {
     // KasBot V2  -  Kalman filter module - http://www.x-firm.com/?page_id=145
     // Modified by Kristian Lauszus
     // See my blog post for more information: http://blog.tkjelectronics.dk/2012/09/a-practical-approach-to-kalman-filter-and-how-to-implement-it
@@ -91,3 +92,4 @@ void Kalman::setRmeasure(float R_measure) { this->R_measure = R_measure; };
 float Kalman::getQangle() { return this->Q_angle; };
 float Kalman::getQbias() { return this->Q_bias; };
 float Kalman::getRmeasure() { return this->R_measure; };
+float Kalman::getBias() { return this->bias; };
